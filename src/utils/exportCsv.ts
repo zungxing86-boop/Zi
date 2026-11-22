@@ -11,7 +11,7 @@ export async function downloadCsv(filename: string, headers: string[], rows: (st
     return str;
   };
 
-  const lines = [headers.map(escapeCell).join(','), ...rows.map((r) => r.map(escapeCell).join(',')];
+  const lines = [headers.map(escapeCell).join(','), ...rows.map((r) => r.map(escapeCell).join(','))];
   const csv = '\uFEFF' + lines.join('\r\n');
 
   // Android WebView does not reliably download blob: URLs. Use native

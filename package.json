@@ -1,16 +1,18 @@
 {
-  "name": "esg-data-dashboard",
+  "name": "zi-national-hazards-atlas",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "predev": "[ -d node_modules/.bin ] || bun install || npm install",
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "prebuild": "[ -d node_modules/.bin ] || bun install || npm install",
     "build": "vite build",
+    "build:web": "vite build",
     "preview": "vite preview",
-    "prelint": "[ -d node_modules/.bin ] || bun install || npm install",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "desktop": "npm run build && electron .",
+    "dist:win": "npm run build && electron-builder --win nsis portable --x64 --publish never",
+    "android:add": "cap add android",
+    "android:sync": "npm run build && cap sync android"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -22,10 +24,49 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.5",
-    "vite": "^8.3.0"
+    "vite": "^8.3.0",
+    "@capacitor/core": "^8.6.2",
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/share": "^8.0.0",
+    "@fontsource/vazirmatn": "^5.0.0",
+    "@fontsource/ibm-plex-mono": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "@capacitor/cli": "^8.6.2",
+    "electron": "^45.4.1",
+    "electron-builder": "^26.0.12"
+  },
+  "productName": "Zi Atlas",
+  "description": "Offline Persian national hazards and biosecurity interactive atlas",
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "ir.zi.nationalhazardsatlas",
+    "productName": "Zi Atlas",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "artifactName": "Zi-Setup-${version}-${arch}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "portable": {
+      "artifactName": "Zi-Portable-${version}-${arch}.${ext}"
+    }
   }
 }
